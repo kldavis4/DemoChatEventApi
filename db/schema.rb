@@ -11,11 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160131022523) do
+ActiveRecord::Schema.define(version: 20160131152215) do
 
   create_table "events", force: true do |t|
     t.string   "user",       default: ""
-    t.string   "type",       default: ""
+    t.string   "event_type", default: ""
     t.string   "message",    default: ""
     t.string   "otheruser",  default: ""
     t.datetime "date",       default: '2016-01-31 02:32:53'
