@@ -49,6 +49,8 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+gem 'rename'
+
 group :development do
   gem 'sqlite3'
 end
