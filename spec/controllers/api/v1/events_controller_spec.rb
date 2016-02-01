@@ -26,7 +26,7 @@ describe Api::V1::EventsController do
 
       it "renders the json representation for the event record just created" do
         event_response = JSON.parse(response.body, symbolize_names: true)
-        expect(event_response[:user]).to eql @event_attributes[:user]
+        expect(event_response[:status]).to eql "ok"
       end
 
       it { should respond_with 200 }
