@@ -16,4 +16,41 @@ describe Api::V1::EventsController do
 
     it { should respond_with 200 }
   end
+
+  describe "POST #create" do
+    context "when is successfully created" do
+      before(:each) do
+        @event_attributes = FactoryGirl.attributes_for :event
+        post :create, @event_attributes, format: :json
+      end
+
+      it "renders the json representation for the event record just created" do
+        event_response = JSON.parse(response.body, symbolize_names: true)
+        expect(event_response[:user]).to eql @event_attributes[:user]
+      end
+
+      it { should respond_with 201 }
+    end
+
+    context "when is not created" do
+      before(:each) do
+        #notice I'm not including the user
+        @invalid_event_attributes = { type: "comment",
+                                      message: "This is a test" }
+        post :create, @invalid_event_attributes, format: :json
+      end
+
+      it "renders an errors json" do
+        event_response = JSON.parse(response.body, symbolize_names: true)
+        expect(event_response).to have_key(:errors)
+      end
+
+      it "renders the json errors on why the event could not be created" do
+        event_response = JSON.parse(response.body, symbolize_names: true)
+        expect(event_response[:errors][:user]).to include "can't be blank"
+      end
+
+      it { should respond_with 422 }
+    end
+  end
 end
