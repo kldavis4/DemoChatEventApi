@@ -10,7 +10,7 @@ class Api::V1::EventsController < ApplicationController
     puts params
     event = Event.new(event_params)
     if event.save
-      render json: event, status: 201, location: [:api, event]
+      render json: event, status: 200, location: [:api, event]
     else
       render json: { errors: event.errors }, status: 422
     end
