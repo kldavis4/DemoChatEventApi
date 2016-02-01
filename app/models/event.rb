@@ -7,4 +7,12 @@ class Event < ActiveRecord::Base
   #alias_attribute :type, :event_type
 
   #TODO restrict invalid post body types to the ones that are specified
+
+  def as_json(options={})
+    super(:only => [:user, :type, :date, :message, :otheruser])
+  end
+
+  def serializable_hash(options)
+    super(options).select { |_, v| v }
+  end
 end
