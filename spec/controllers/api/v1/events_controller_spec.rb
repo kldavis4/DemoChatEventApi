@@ -9,12 +9,27 @@ describe Api::V1::EventsController do
       get :show, id: @event.id, format: :json
     end
 
-    it "returns the information about a reporter on a hash" do
+    it "returns the information about an event on a hash" do
       event_response = JSON.parse(response.body, symbolize_names: true)
       expect(event_response[:user]).to eql @event.user
     end
 
     it { should respond_with 200 }
+  end
+
+  describe "POST #clear" do
+    before(:each) do
+      post :clear
+    end
+
+    it "returns status ok" do
+      clear_response = JSON.parse(response.body, symbolize_names: true)
+      expect(clear_response[:status]).to eql "ok"
+    end
+
+    it "has cleared all events" do
+      expect(Event.count(:all)).to eql 0
+    end
   end
 
   describe "POST #create" do
@@ -34,7 +49,7 @@ describe Api::V1::EventsController do
 
     context "when is not created" do
       before(:each) do
-        #notice I'm not including the user
+        #notice it is missing type, date, user
         @invalid_event_attributes = { message: "This is a test" }
         post :create, @invalid_event_attributes, format: :json
       end
