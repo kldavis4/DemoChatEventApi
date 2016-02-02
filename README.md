@@ -38,6 +38,9 @@ rake db:schema:load RAILS_ENV=test
 ```
 rails server
 ```
+
+Access API endpoint at http://localhost:3000/events
+
 ## How to run the test suite
 ```
 bundle exec rspec spec
