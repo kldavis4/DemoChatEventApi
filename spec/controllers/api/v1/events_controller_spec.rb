@@ -50,6 +50,25 @@ describe Api::V1::EventsController do
       it { should respond_with 200 }
     end
 
+    context "three events selecting all with filter checking sort" do
+      before(:each) do
+        @event1 = FactoryGirl.create :event, :date => Date.new(2016, 1, 1)
+        @event2 = FactoryGirl.create :event, :date => Date.new(2016, 1, 2)
+        @event3 = FactoryGirl.create :event, :date => Date.new(2016, 1, 3)
+        get :index, :from => '2016-01-01T00:00:00Z', :to => '2016-01-03T23:59:59Z', format: :json
+      end
+
+      it "returns three events sorted by date ascending" do
+        events_response = JSON.parse(response.body, symbolize_names: true)
+        expect(events_response[:events].length).to eql 3
+        expect(DateTime.strptime(events_response[:events][0][:date],'%FT%TZ')).to eql Date.new(2016, 1, 1)
+        expect(DateTime.strptime(events_response[:events][1][:date],'%FT%TZ')).to eql Date.new(2016, 1, 2)
+        expect(DateTime.strptime(events_response[:events][2][:date],'%FT%TZ')).to eql Date.new(2016, 1, 3)
+      end
+
+      it { should respond_with 200 }
+    end
+
     context "invalid to/from parameters" do
       before(:each) do
         get :index, :from => 'XXXXX', :to => 'XXXX', format: :json
