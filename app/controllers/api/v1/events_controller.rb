@@ -13,20 +13,6 @@ class Api::V1::EventsController < ApplicationController
     respond_with(@event)
   end
 
-  def create
-    event = Event.new(event_params)
-    if event.save
-      render json: { status: "ok" }, status: 200, location: [:api, event]
-    else
-      render json: { errors: event.errors }, status: 422
-    end
-  end
-
-  def clear
-    Event.delete_all
-    render json: { status: "ok" }, status: 200
-  end
-
   def index
     if params[:from].present? && params[:to].present?
       errors = nil
@@ -47,7 +33,7 @@ class Api::V1::EventsController < ApplicationController
       end
 
       if errors != nil
-        render json: errors, status: 400
+        render json: { status: "error" }, status: 400
         return
       end
 
@@ -97,7 +83,7 @@ class Api::V1::EventsController < ApplicationController
     end
 
     if errors != nil
-      render json: errors, status: 400
+      render json: { status: "error" }, status: 400
       return
     end
 
@@ -131,6 +117,20 @@ class Api::V1::EventsController < ApplicationController
     end
 
     render json: { events: results }, status: 200
+  end
+
+  def clear
+    Event.delete_all
+    render json: { status: "ok" }, status: 200
+  end
+
+  def create
+    event = Event.new(event_params)
+    if event.save
+      render json: { status: "ok" }, status: 200, location: [:api, event]
+    else
+      render json: { status: "error" }, status: 422
+    end
   end
 
   private

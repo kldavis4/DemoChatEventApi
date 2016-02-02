@@ -55,15 +55,14 @@ describe Api::V1::EventsController do
         get :index, :from => 'XXXXX', :to => 'XXXX', format: :json
       end
 
-      it "renders an errors json" do
+      it "renders an error status json" do
         event_response = JSON.parse(response.body, symbolize_names: true)
-        expect(event_response).to have_key(:errors)
+        expect(event_response).to have_key(:status)
       end
 
       it "renders the json errors on why the params are invalid" do
         event_response = JSON.parse(response.body, symbolize_names: true)
-        expect(event_response[:errors][:to]).to eql "Invalid 'to' date"
-        expect(event_response[:errors][:from]).to eql "Invalid 'from' date"
+        expect(event_response[:status]).to eql "error"
       end
 
       it { should respond_with 400 }
@@ -246,16 +245,14 @@ describe Api::V1::EventsController do
         get :summary, :from => 'XXXXX', :to => 'XXXX', :by => 'second', format: :json
       end
 
-      it "renders an errors json" do
+      it "renders an error status json" do
         event_response = JSON.parse(response.body, symbolize_names: true)
-        expect(event_response).to have_key(:errors)
+        expect(event_response).to have_key(:status)
       end
 
       it "renders the json errors on why the params are invalid" do
         event_response = JSON.parse(response.body, symbolize_names: true)
-        expect(event_response[:errors][:to]).to eql "Invalid 'to' date"
-        expect(event_response[:errors][:from]).to eql "Invalid 'from' date"
-        expect(event_response[:errors][:by]).to eql "Expected 'day', 'hour', or 'minute"
+        expect(event_response[:status]).to eql "error"
       end
 
       it { should respond_with 400 }
@@ -299,16 +296,14 @@ describe Api::V1::EventsController do
         post :create, @invalid_event_attributes, format: :json
       end
 
-      it "renders an errors json" do
+      it "renders an error status json" do
         event_response = JSON.parse(response.body, symbolize_names: true)
-        expect(event_response).to have_key(:errors)
+        expect(event_response).to have_key(:status)
       end
 
       it "renders the json errors on why the event could not be created" do
         event_response = JSON.parse(response.body, symbolize_names: true)
-        expect(event_response[:errors][:user]).to include "can't be blank"
-        expect(event_response[:errors][:type]).to include "can't be blank"
-        expect(event_response[:errors][:date]).to include "can't be blank"
+        expect(event_response[:status]).to include "error"
       end
 
       it { should respond_with 422 }
